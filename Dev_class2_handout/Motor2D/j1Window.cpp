@@ -72,6 +72,8 @@ bool j1Window::Awake()
 
 			// TODO 4: Read the title of the app from the XML
 			// and set directly the window title using SetTitle()
+			xml_node branchesXml = App->GetconfigFile();
+			SetTitle(branchesXml.attribute("name").value());
 
 		}
 	}

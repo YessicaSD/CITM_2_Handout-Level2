@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Config file for the game -->
+<config>
+  <moduleWindow> <title> My super awesome game with XML =P</title> </moduleWindow>
+
+<moduleRender>
+  <backgroundColor>
+    <red>0 </red>
+    <green> 0  </green>
+    <blue> 0 </blue>
+    <alpha> 0 </alpha>
+  </backgroundColor>
+</moduleRender>
+
+  <moduleTexture>
+    <imagePath> </imagePath>
+  </moduleTexture>
+
+<moduleAudio>
+  <fxPath>
+    
+  </fxPath>
+  <musicPath> 
+    
+  </musicPath>
+</moduleAudio>
+
+</config>
