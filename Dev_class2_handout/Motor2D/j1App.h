@@ -81,10 +81,12 @@ private:
 	// a xml_document to store the while config file and
 	// a xml_node to read specific branches of the xml
 	xml_document configFile;
-	xml_node branchesXml;
+	xml_node nodeName;
 
 	int					argc;
 	char**				args;
+
+
 };
 
 extern j1App* App; 

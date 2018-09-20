@@ -63,6 +63,13 @@ bool j1App::Awake()
 	
 	xml_parse_result result = configFile.load_file("config.xml");
 
+	if (result.status== status_file_not_found)
+	{
+		LOG("The xml file is loaded");
+		return false;
+	};
+	nodeName = configFile.append_child("title");
+	
 	bool ret = true;
 
 	p2List_item<j1Module*>* item;
@@ -226,7 +233,7 @@ const char* j1App::GetArgv(int index) const
 		return NULL;
 }
 
-xml_node::GetconfigFile() const
+xml_node j1App ::GetconfigFile() const
 {
 	return configFile;
 }

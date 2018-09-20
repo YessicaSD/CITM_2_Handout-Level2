@@ -72,8 +72,17 @@ bool j1Window::Awake()
 
 			// TODO 4: Read the title of the app from the XML
 			// and set directly the window title using SetTitle()
-			xml_node branchesXml = App->GetconfigFile();
-			SetTitle(branchesXml.attribute("name").value());
+			for (pugi::xml_node tool = App->GetconfigFile().child("title"); tool; tool = tool.next_sibling("Tool"))
+			{
+				/*std::cout << "Tool " << tool.attribute("Filename").value();
+				std::cout << ": AllowRemote " << tool.attribute("AllowRemote").as_bool();
+				std::cout << ", Timeout " << tool.attribute("Timeout").as_int();
+				std::cout << ", Description '" << tool.child_value("Description") << "'\n";*/
+				SetTitle(tool.child_value("title"));
+			}
+			
+			/*xml_node branchesXml = App->GetconfigFile();
+			SetTitle(branchesXml.attribute("title").value());*/
 
 		}
 	}
