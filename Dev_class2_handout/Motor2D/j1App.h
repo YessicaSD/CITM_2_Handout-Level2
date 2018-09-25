@@ -4,7 +4,7 @@
 #include "p2List.h"
 #include "j1Module.h"
 #include "PugiXml\src\pugixml.hpp"
-using  namespace pugi;
+
 // Modules
 class j1Window;
 class j1Input;
@@ -41,7 +41,7 @@ public:
 	// Exposing some properties for reading
 	int GetArgc() const;
 	const char* GetArgv(int index) const;
-	xml_node GetconfigFile() const;
+	pugi::xml_node GetconfigFile() const;
 
 private:
 
@@ -69,7 +69,8 @@ public:
 	j1Textures*			tex;
 	j1Audio*			audio;
 	j1Scene*			scene;
-
+	pugi::xml_document configFile;
+	pugi::xml_node nodeF;
 
 private:
 
@@ -80,8 +81,7 @@ private:
 	// TODO 2: Create two new variables from pugui namespace:
 	// a xml_document to store the while config file and
 	// a xml_node to read specific branches of the xml
-	xml_document configFile;
-	xml_node nodeName;
+	
 
 	int					argc;
 	char**				args;

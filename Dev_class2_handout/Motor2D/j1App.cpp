@@ -61,14 +61,20 @@ bool j1App::Awake()
 	// If everything goes well, load the top tag inside the xml_node property
 	// created in the last TODO
 	
-	xml_parse_result result = configFile.load_file("config.xml");
+	pugi::xml_parse_result result = configFile.load_file("config.xml");
 
-	if (result.status== status_file_not_found)
+	if (!result)
 	{
-		LOG("The xml file is loaded");
+		LOG("The xml file is not loaded.error:%s",result.description());
+
 		return false;
-	};
-	nodeName = configFile.append_child("title");
+	}
+	else
+	{
+		
+		nodeF = configFile.child("config");
+		
+	}
 	
 	bool ret = true;
 
@@ -233,7 +239,7 @@ const char* j1App::GetArgv(int index) const
 		return NULL;
 }
 
-xml_node j1App ::GetconfigFile() const
+pugi::xml_node j1App ::GetconfigFile() const
 {
 	return configFile;
 }

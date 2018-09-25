@@ -34,31 +34,31 @@ bool j1Window::Awake()
 		//Create window
 		Uint32 flags = SDL_WINDOW_SHOWN;
 
-		width = WIDTH;
-		height = HEIGHT;
-		scale = SCALE;
+		width = App->nodeF.child("window").child("resolution").attribute("width").as_int();
+		height = App->nodeF.child("window").child("resolution").attribute("height").as_int();
+		scale = App->nodeF.child("window").child("resolution").attribute("scale").as_int();
 
-		if(FULLSCREEN)
+		if(App->nodeF.child("window").child("fullscreen").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
 		}
 
-		if(BORDERLESS)
+		if(App->nodeF.child("window").child("borderless").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		if(RESIZABLE)
+		if(App->nodeF.child("window").child("resizable").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_RESIZABLE;
 		}
 
-		if(FULLSCREEN_WINDOW)
+		if(App->nodeF.child("window").child("fullscreen_window").attribute("value").as_bool())
 		{
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(App->nodeF.child("app").child_value("title"), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 
 		if(window == NULL)
 		{
@@ -72,17 +72,11 @@ bool j1Window::Awake()
 
 			// TODO 4: Read the title of the app from the XML
 			// and set directly the window title using SetTitle()
-			for (pugi::xml_node tool = App->GetconfigFile().child("title"); tool; tool = tool.next_sibling("Tool"))
-			{
-				/*std::cout << "Tool " << tool.attribute("Filename").value();
-				std::cout << ": AllowRemote " << tool.attribute("AllowRemote").as_bool();
-				std::cout << ", Timeout " << tool.attribute("Timeout").as_int();
-				std::cout << ", Description '" << tool.child_value("Description") << "'\n";*/
-				SetTitle(tool.child_value("title"));
-			}
 			
-			/*xml_node branchesXml = App->GetconfigFile();
-			SetTitle(branchesXml.attribute("title").value());*/
+			
+		/*	SetTitle(App->nodeF.child_value());*/
+
+			
 
 		}
 	}
