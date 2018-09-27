@@ -12,10 +12,14 @@
 struct TileSetInfo
 {
 	uint firstgit = 0;
-	char* name;
+	const char* name;
 	uint tileHeight = 0, tileWidth=0;
 	uint spacing = 0;
 	uint margin = 0;
+	const char* image_sorce;
+	uint image_width = 0;
+	uint image_height = 0;
+	SDL_Texture* Tiletxt;
 };
 
 
@@ -33,14 +37,15 @@ struct Mapinfo
 	};
 	enum class Orientation_State
 	{
-		perpective,
+		
 		orthogonal,
+		isometric,
 		error,
 
 	};
 
-	uint tileHeight = 0, tileWidth;
-	uint width, height;
+	uint tileHeight = 0, tileWidth=0;
+	uint width=0, height=0;
 	Render_Orientation renderorder = Render_Orientation::error;
 	float version = 0.0f;
 	Orientation_State orientation = Orientation_State::error;
@@ -52,7 +57,7 @@ public:
 
 	// TODO 1: Add your struct for map info as public for now
 	 Mapinfo mapinfo1;
-	
+	 TileSetInfo tilesetinfo1;
 
 private:
 
@@ -81,7 +86,7 @@ public:
 
 private:
 	void LoadMap(pugi::xml_node& node);
-
+	void LoadTileSet(pugi::xml_node& node);
 
 };
 
