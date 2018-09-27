@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<save>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<scene />
+	<renderer>
+		<camera x="751" y="489" />
+	</renderer>
+</save>
