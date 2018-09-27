@@ -6,6 +6,7 @@
 #include "j1Audio.h"
 #include "j1Render.h"
 #include "j1Window.h"
+#include "j1Map.h"
 #include "j1Scene.h"
 
 j1Scene::j1Scene() : j1Module()
@@ -29,8 +30,7 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	img = App->tex->Load("textures/test.png");
-	App->audio->PlayMusic("audio/music/music_sadpiano.ogg");
+	App->map->Load("hello2.tmx");
 	return true;
 }
 
@@ -43,13 +43,11 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	// TODO 2: Call load / save methods when pressing l/s
+	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+		App->LoadGame();
 
-	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->SaveGameNow();
-	
-	if (App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->LoadGameNow();
+	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
+		App->SaveGame();
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y -= 1;
@@ -63,7 +61,17 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += 1;
 
-	App->render->Blit(img, 0, 0);
+	//App->render->Blit(img, 0, 0);
+	App->map->Draw();
+
+	// TODO 7: Set the window title like
+	// "Map:%dx%d Tiles:%dx%d Tilesets:%d"
+	p2SString title("Map:%dx%d Tiles:%dx%d Tilesets:%d",
+					0, 0,
+					0, 0,
+					0);
+
+	App->win->SetTitle(title.GetString());
 	return true;
 }
 
