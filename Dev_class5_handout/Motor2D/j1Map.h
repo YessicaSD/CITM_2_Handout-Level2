@@ -22,8 +22,6 @@ struct MapLayer
 		}
 	}
 };
-	// TODO 6: Short function to get the value of x,y
-
 
 
 // ----------------------------------------------------
@@ -45,6 +43,22 @@ struct TileSet
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
+
+	SDL_Rect Rectfind(uint tileId)
+	{
+		
+			tileId - 1;
+			SDL_Rect rect;
+			rect.w= tex_width;
+			rect.h = tex_height;
+			rect.x = margin + ((rect.w + spacing) * (tileId % num_tiles_width));
+			rect.y = margin + ((rect.h + spacing) * (tileId / num_tiles_width));
+			return rect;
+		
+		
+		
+			
+	}
 };
 
 enum MapTypes
@@ -106,11 +120,19 @@ public:
 
 	MapData data;
 
+	// TODO 6: Short function to get the value of x,y
+	inline uint Get( int x,  int y) const
+	{
+		return  (y * data.width + x);
+	}
+
 private:
 
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
 };
+
+
 
 #endif // __j1MAP_H__

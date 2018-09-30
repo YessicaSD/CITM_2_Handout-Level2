@@ -26,7 +26,8 @@ j1App* App = NULL;
 int main(int argc, char* args[])
 {
 	LOG("Engine starting ... %d");
-
+	auto variable = 30 % 8;
+	LOG("%f", variable);
 	MainState state = MainState::CREATE;
 	int result = EXIT_FAILURE;
 
