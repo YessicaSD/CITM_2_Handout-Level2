@@ -155,16 +155,18 @@ bool j1Map::Load(const char* file_name)
 
 	// TODO 4: Iterate all layers and load each of them --Done
 	// Load layer info ----------------------------------------------
+	
+		for (pugi::xml_node layer = map_file.child("map").child("layer"); layer; layer = layer.next_sibling("layer"))
+		{
+			MapLayer* set = new MapLayer();
 
-	for (pugi::xml_node layer = map_file.child("map").child("layer"); layer; layer = tileset.next_sibling("tile"))
-	{
-		MapLayer* set = new MapLayer();
+			LoadLayer(layer, set);
 
-		LoadLayer(map_file.child("map").child("layer"), set);
+			data.layers.add(set);
 
-		data.layers.add(set);
-		
-	}
+		}
+	
+	
 	
 	
 	if(ret == true)
