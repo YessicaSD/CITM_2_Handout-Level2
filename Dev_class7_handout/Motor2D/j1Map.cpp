@@ -32,34 +32,40 @@ void j1Map::Draw()
 		return;
 
 	// TODO 4: Make sure we draw all the layers and not just the first one
-	MapLayer* layer = this->data.layers.start->data;
-
-	for(int y = 0; y < data.height; ++y)
-	{
-		for(int x = 0; x < data.width; ++x)
+	for(p2List_item<MapLayer*>* layer= this->data.layers.start;layer;layer=layer->next)
 		{
-			int tile_id = layer->Get(x, y);
-			if(tile_id > 0)
+		for (int y = 0; y < data.height; ++y)
+		{
+			for (int x = 0; x < data.width; ++x)
 			{
-				TileSet* tileset = GetTilesetFromTileId(tile_id);
-				if (tileset != nullptr)
+				int tile_id = layer->data->Get(x, y);
+				if (tile_id > 0)
 				{
-					SDL_Rect r = tileset->GetTileRect(tile_id);
-					iPoint pos = MapToWorld(x, y);
+					TileSet* tileset = GetTilesetFromTileId(tile_id);
+					if (tileset != nullptr)
+					{
+						SDL_Rect r = tileset->GetTileRect(tile_id);
+						iPoint pos = MapToWorld(x, y);
 
-					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+						App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					}
 				}
 			}
 		}
 	}
+
+
+	
 }
 
 TileSet* j1Map::GetTilesetFromTileId(int id) const
 {
 	// TODO 3: Complete this method so we pick the right
 	// Tileset based on a tile id
+	p2List_item<TileSet*>* actualTile ;
+	for (actualTile = data.tilesets.end; id < actualTile->data->firstgid; actualTile = actualTile->prev) {}
 
-	return data.tilesets.start->data;
+	return actualTile->data;
 }
 
 iPoint j1Map::MapToWorld(int x, int y) const
@@ -400,10 +406,21 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 // Load a group of properties from a node and fill a list with it
 bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
-	bool ret = false;
+	bool ret = true;
 
 	// TODO 6: Fill in the method to fill the custom properties from 
 	// an xml_node
-
+	for (pugi::xml_node nodeProperty = node.child("properties").child("property");nodeProperty; nodeProperty = nodeProperty.next_sibling("property"))
+	{
+		if (nodeProperty.attribute("name").as_string() == "Draw")
+		{
+			properties.Draw = nodeProperty.attribute("value").as_uint();
+		}
+		else if (nodeProperty.attribute("name").as_string() == "Navigation")
+		{
+			properties.Navigation = nodeProperty.attribute("value").as_uint();
+		}
+	}
+	
 	return ret;
 }
