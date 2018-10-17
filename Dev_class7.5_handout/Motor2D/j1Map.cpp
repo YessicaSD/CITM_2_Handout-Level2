@@ -39,6 +39,32 @@ void j1Map::PropagateBFS()
 {
 	// TODO 1: If frontier queue contains elements
 	// pop the last one and calculate its 4 neighbors
+	
+	
+	
+	if ( frontier.Count()>0)
+	{
+		p2Queue_item<iPoint>* ThisFrontier = frontier.GetLast();
+		
+		iPoint neightboard[4];
+		neightboard[0].create(ThisFrontier->data.x - 1, ThisFrontier->data.y);
+		neightboard[1].create(ThisFrontier->data.x + 1, ThisFrontier->data.y);
+		neightboard[2].create(ThisFrontier->data.x, ThisFrontier->data.y - 1);
+		neightboard[3].create(ThisFrontier->data.x, ThisFrontier->data.y + 1);
+		for (uint i = 0; i < 4; ++i)
+		{
+			if (visited.find(neightboard[i]) == -1)
+			{
+				visited.add(neightboard[i]);
+				frontier.Push(neightboard[i]);
+
+			}
+		}
+		
+		frontier.Pop(ThisFrontier->data);
+		
+	}
+	
 
 	// TODO 2: For each neighbor, if not visited, add it
 	// to the frontier queue and visited list
