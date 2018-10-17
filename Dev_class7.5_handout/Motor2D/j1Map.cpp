@@ -45,23 +45,36 @@ void j1Map::PropagateBFS()
 	if ( frontier.Count()>0)
 	{
 		p2Queue_item<iPoint>* ThisFrontier = frontier.GetLast();
-		
-		iPoint neightboard[4];
-		neightboard[0].create(ThisFrontier->data.x - 1, ThisFrontier->data.y);
-		neightboard[1].create(ThisFrontier->data.x + 1, ThisFrontier->data.y);
-		neightboard[2].create(ThisFrontier->data.x, ThisFrontier->data.y - 1);
-		neightboard[3].create(ThisFrontier->data.x, ThisFrontier->data.y + 1);
+		iPoint neighbour[4];
+		neighbour[0].create(ThisFrontier->data.x - 1, ThisFrontier->data.y);
+		neighbour[1].create(ThisFrontier->data.x + 1, ThisFrontier->data.y);
+		neighbour[2].create(ThisFrontier->data.x, ThisFrontier->data.y - 1);
+		neighbour[3].create(ThisFrontier->data.x, ThisFrontier->data.y + 1);
 		for (uint i = 0; i < 4; ++i)
 		{
-			if (visited.find(neightboard[i]) == -1)
+			if (visited.find(neighbour[i]) == -1)
 			{
-				visited.add(neightboard[i]);
-				frontier.Push(neightboard[i]);
-
+				visited.add(neighbour[i]);
+				frontier.Push(neighbour[i]);
 			}
 		}
-		
 		frontier.Pop(ThisFrontier->data);
+
+		//iPoint currNode = frontier.GetLast()->data;
+		//frontier.Pop(currNode);
+		//iPoint neighbour[4];
+		//neighbour[0].create(currNode.x - 1, currNode.y);
+		//neighbour[1].create(currNode.x + 1, currNode.y);
+		//neighbour[2].create(currNode.x, currNode.y - 1);
+		//neighbour[3].create(currNode.x, currNode.y + 1);
+		//for (uint i = 0; i < 4; ++i)
+		//{
+		//	if (visited.find(neighbour[i]) == -1)
+		//	{
+		//		visited.add(neighbour[i]);
+		//		frontier.Push(neighbour[i]);
+		//	}
+		//}
 		
 	}
 	
