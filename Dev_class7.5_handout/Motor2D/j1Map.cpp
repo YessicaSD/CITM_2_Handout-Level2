@@ -44,7 +44,7 @@ void j1Map::PropagateBFS()
 	
 	if ( frontier.Count()>0)
 	{
-		p2Queue_item<iPoint>* ThisFrontier = frontier.GetLast();
+		/*p2Queue_item<iPoint>* ThisFrontier = frontier.GetLast();
 		iPoint neighbour[4];
 		neighbour[0].create(ThisFrontier->data.x - 1, ThisFrontier->data.y);
 		neighbour[1].create(ThisFrontier->data.x + 1, ThisFrontier->data.y);
@@ -58,23 +58,23 @@ void j1Map::PropagateBFS()
 				frontier.Push(neighbour[i]);
 			}
 		}
-		frontier.Pop(ThisFrontier->data);
+		frontier.Pop(ThisFrontier->data);*/
 
-		//iPoint currNode = frontier.GetLast()->data;
-		//frontier.Pop(currNode);
-		//iPoint neighbour[4];
-		//neighbour[0].create(currNode.x - 1, currNode.y);
-		//neighbour[1].create(currNode.x + 1, currNode.y);
-		//neighbour[2].create(currNode.x, currNode.y - 1);
-		//neighbour[3].create(currNode.x, currNode.y + 1);
-		//for (uint i = 0; i < 4; ++i)
-		//{
-		//	if (visited.find(neighbour[i]) == -1)
-		//	{
-		//		visited.add(neighbour[i]);
-		//		frontier.Push(neighbour[i]);
-		//	}
-		//}
+		iPoint currNode = frontier.GetLast()->data;
+		frontier.Pop(currNode);
+		iPoint neighbour[4];
+		neighbour[0].create(currNode.x - 1, currNode.y);
+		neighbour[1].create(currNode.x + 1, currNode.y);
+		neighbour[2].create(currNode.x, currNode.y - 1);
+		neighbour[3].create(currNode.x, currNode.y + 1);
+		for (uint i = 0; i < 4; ++i)
+		{
+			if (visited.find(neighbour[i]) == -1 && IsWalkable(neighbour[i].x,neighbour[i].y))
+			{
+				visited.add(neighbour[i]);
+				frontier.Push(neighbour[i]);
+			}
+		}
 		
 	}
 	
@@ -121,7 +121,12 @@ bool j1Map::IsWalkable(int x, int y) const
 {
 	// TODO 3: return true only if x and y are within map limits
 	// and the tile is walkable (tile id 0 in the navigation layer)
-	return true;
+	p2List_item<MapLayer*>* walkLayer;
+	for ( walkLayer = data.layers.start; walkLayer && walkLayer->data->name != "Colisions"; walkLayer = walkLayer->next)
+	{}
+	return(x >= 0 && x < data.width && y >= 0 && y < data.height && walkLayer->data->Get(x, y) == 0);
+	
+	
 }
 
 void j1Map::Draw()

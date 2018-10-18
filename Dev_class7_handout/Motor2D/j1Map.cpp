@@ -33,12 +33,12 @@ void j1Map::Draw()
 
 	// TODO 4: Make sure we draw all the layers and not just the first one
 	for(p2List_item<MapLayer*>* layer= this->data.layers.start;layer;layer=layer->next)
-		{
+	{
 		for (int y = 0; y < data.height; ++y)
 		{
 			for (int x = 0; x < data.width; ++x)
 			{
-				int tile_id = layer->data->Get(x, y);
+				uint tile_id = layer->data->Get(x, y);
 				if (tile_id > 0)
 				{
 					TileSet* tileset = GetTilesetFromTileId(tile_id);
@@ -416,10 +416,11 @@ bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 		{
 			properties.Draw = nodeProperty.attribute("value").as_uint();
 		}
-		else if (nodeProperty.attribute("name").as_string() == "Navigation")
+		if (nodeProperty.attribute("name").as_string() == "Navigation")
 		{
 			properties.Navigation = nodeProperty.attribute("value").as_uint();
 		}
+
 	}
 	
 	return ret;
