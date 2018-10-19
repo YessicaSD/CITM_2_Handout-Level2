@@ -31,8 +31,10 @@ void j1Map::ResetBFS()
 {
 	frontier.Clear();
 	visited.clear();
+	celda startPos;
+	startPos.Pos.create(19,4 );
 	frontier.Push(iPoint(19, 4));
-	visited.add(iPoint(19, 4));
+	visited.add(startPos);
 }
 
 void j1Map::PropagateBFS()
@@ -42,37 +44,40 @@ void j1Map::PropagateBFS()
 	
 	
 	
-	if ( frontier.Count()>0)
+	if ( frontier.Count()>0 && !hasFoundDestination)
 	{
-		/*p2Queue_item<iPoint>* ThisFrontier = frontier.GetLast();
-		iPoint neighbour[4];
-		neighbour[0].create(ThisFrontier->data.x - 1, ThisFrontier->data.y);
-		neighbour[1].create(ThisFrontier->data.x + 1, ThisFrontier->data.y);
-		neighbour[2].create(ThisFrontier->data.x, ThisFrontier->data.y - 1);
-		neighbour[3].create(ThisFrontier->data.x, ThisFrontier->data.y + 1);
-		for (uint i = 0; i < 4; ++i)
-		{
-			if (visited.find(neighbour[i]) == -1)
-			{
-				visited.add(neighbour[i]);
-				frontier.Push(neighbour[i]);
-			}
-		}
-		frontier.Pop(ThisFrontier->data);*/
+	
 
-		iPoint currNode = frontier.GetLast()->data;
+
+		//------------------------------------------------------
+		iPoint currNode;
 		frontier.Pop(currNode);
-		iPoint neighbour[4];
-		neighbour[0].create(currNode.x - 1, currNode.y);
-		neighbour[1].create(currNode.x + 1, currNode.y);
-		neighbour[2].create(currNode.x, currNode.y - 1);
-		neighbour[3].create(currNode.x, currNode.y + 1);
+		bool isOnvisited;
+		celda neighbour[4];
+		neighbour[0].Pos.create(currNode.x - 1, currNode.y);
+		neighbour[1].Pos.create(currNode.x + 1, currNode.y);
+		neighbour[2].Pos.create(currNode.x, currNode.y - 1);
+		neighbour[3].Pos.create(currNode.x, currNode.y + 1);
+
 		for (uint i = 0; i < 4; ++i)
 		{
-			if (visited.find(neighbour[i]) == -1 && IsWalkable(neighbour[i].x,neighbour[i].y))
+			isOnvisited = false;
+			for (p2List_item<celda>* find= visited.start; find; find= find->next)
 			{
+				if (neighbour[i].Pos ==find->data.Pos)
+				{
+					isOnvisited = true;
+				}
+			}
+			if (!isOnvisited && IsWalkable(neighbour[i].Pos.x, neighbour[i].Pos.y))
+			{
+				neighbour[i].MomPos.create(currNode.x, currNode.y);
 				visited.add(neighbour[i]);
-				frontier.Push(neighbour[i]);
+				frontier.Push(neighbour[i].Pos);
+				if (neighbour[i].Pos == destination)
+				{
+					hasFoundDestination = true;
+				}
 			}
 		}
 		
@@ -88,11 +93,11 @@ void j1Map::DrawBFS()
 	iPoint point;
 
 	// Draw visited
-	p2List_item<iPoint>* item = visited.start;
+	p2List_item<celda>* item = visited.start;
 
 	while(item)
 	{
-		point = item->data;
+		point = item->data.Pos;
 		TileSet* tileset = GetTilesetFromTileId(26);
 
 		SDL_Rect r = tileset->GetTileRect(26);

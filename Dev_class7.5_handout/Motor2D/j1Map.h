@@ -77,7 +77,21 @@ struct TileSet
 	int					offset_x;
 	int					offset_y;
 };
+struct celda
+{
 
+	iPoint Pos;
+	iPoint MomPos;
+	celda()
+	{
+
+	}
+	celda(iPoint Pos, iPoint MomPos):Pos(Pos),MomPos(MomPos)
+	{
+
+	}
+
+};
 enum MapTypes
 {
 	MAPTYPE_UNKNOWN = 0,
@@ -151,7 +165,9 @@ private:
 
 	/// BFS
 	p2Queue<iPoint>		frontier;
-	p2List<iPoint>		visited;
+	p2List<celda>		visited;
+	iPoint destination = { 20, 0 };
+	bool hasFoundDestination = false;
 };
 
 #endif // __j1MAP_H__
