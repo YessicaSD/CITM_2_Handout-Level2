@@ -82,6 +82,7 @@ struct celda
 
 	iPoint Pos;
 	iPoint MomPos;
+	p2List_item<celda>* MomPosPointer=nullptr;
 	celda()
 	{
 
@@ -168,6 +169,7 @@ private:
 	p2List<celda>		visited;
 	iPoint destination = { 20, 0 };
 	bool hasFoundDestination = false;
+	
 };
 
 #endif // __j1MAP_H__

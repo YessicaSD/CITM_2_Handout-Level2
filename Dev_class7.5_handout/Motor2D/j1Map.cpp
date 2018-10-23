@@ -31,6 +31,7 @@ void j1Map::ResetBFS()
 {
 	frontier.Clear();
 	visited.clear();
+
 	celda startPos;
 	startPos.Pos.create(19,4 );
 	frontier.Push(iPoint(19, 4));
@@ -69,8 +70,17 @@ void j1Map::PropagateBFS()
 					isOnvisited = true;
 				}
 			}
+
 			if (!isOnvisited && IsWalkable(neighbour[i].Pos.x, neighbour[i].Pos.y))
 			{
+				for (p2List_item<celda>* find = visited.start; find; find = find->next)
+				{
+					if (currNode == find->data.Pos)
+					{
+						neighbour[i].MomPosPointer = find;
+					}
+				}
+
 				neighbour[i].MomPos.create(currNode.x, currNode.y);
 				visited.add(neighbour[i]);
 				frontier.Push(neighbour[i].Pos);
@@ -92,7 +102,7 @@ void j1Map::DrawBFS()
 {
 	iPoint point;
 
-	// Draw visited
+	 //Draw visited
 	p2List_item<celda>* item = visited.start;
 
 	while(item)
@@ -107,7 +117,28 @@ void j1Map::DrawBFS()
 
 		item = item->next;
 	}
+	if (hasFoundDestination)
+	{
+		p2List_item<celda>* pathBack;
+		bool findEnd = false;
+		for (pathBack = visited.start; pathBack && findEnd != false; pathBack= pathBack->next)
+		{
+			if (pathBack->data.Pos == destination)
+			{
+				findEnd = true;
+			}
 
+		}
+		for ( pathBack; pathBack; pathBack= pathBack->data.MomPosPointer )
+		{
+			iPoint pos = MapToWorld(pathBack->data.Pos.x, pathBack->data.Pos.y);
+			TileSet* tileset = GetTilesetFromTileId(27);
+
+			SDL_Rect r = tileset->GetTileRect(27);
+			App->render->Blit(tileset->texture, pos.x, pos.y);
+
+		}
+	}
 	// Draw frontier
 	for (uint i = 0; i < frontier.Count(); ++i)
 	{
