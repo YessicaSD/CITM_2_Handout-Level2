@@ -33,9 +33,13 @@ void j1Map::ResetBFS()
 	visited.clear();
 
 	celda startPos;
+
+	p2List_item<celda>* aux;
 	startPos.Pos.create(19,4 );
-	frontier.Push(iPoint(19, 4));
-	visited.add(startPos);
+	aux = visited.add(startPos);
+	aux->data.ThisPosPointerinVisited = aux;
+	frontier.Push(startPos);
+	
 }
 
 void j1Map::PropagateBFS()
@@ -48,17 +52,15 @@ void j1Map::PropagateBFS()
 	if ( frontier.Count()>0 && !hasFoundDestination)
 	{
 	
-
-
 		//------------------------------------------------------
-		iPoint currNode;
+		celda currNode;
 		frontier.Pop(currNode);
 		bool isOnvisited;
 		celda neighbour[4];
-		neighbour[0].Pos.create(currNode.x - 1, currNode.y);
-		neighbour[1].Pos.create(currNode.x + 1, currNode.y);
-		neighbour[2].Pos.create(currNode.x, currNode.y - 1);
-		neighbour[3].Pos.create(currNode.x, currNode.y + 1);
+		neighbour[0].Pos.create(currNode.Pos.x - 1, currNode.Pos.y);
+		neighbour[1].Pos.create(currNode.Pos.x + 1, currNode.Pos.y);
+		neighbour[2].Pos.create(currNode.Pos.x, currNode.Pos.y - 1);
+		neighbour[3].Pos.create(currNode.Pos.x, currNode.Pos.y + 1);
 
 		for (uint i = 0; i < 4; ++i)
 		{
@@ -73,19 +75,13 @@ void j1Map::PropagateBFS()
 
 			if (!isOnvisited && IsWalkable(neighbour[i].Pos.x, neighbour[i].Pos.y))
 			{
-				for (p2List_item<celda>* find = visited.start; find; find = find->next)
-				{
-					if (currNode == find->data.Pos)
-					{
-						neighbour[i].MomPosPointer = find;
-					}
-				}
-
-				neighbour[i].MomPos.create(currNode.x, currNode.y);
-				visited.add(neighbour[i]);
-				frontier.Push(neighbour[i].Pos);
+				neighbour[i].MomPos.create(currNode.Pos.x, currNode.Pos.y);
+				neighbour[i].MomPosPointer = currNode.ThisPosPointerinVisited;
+				frontier.Push(neighbour[i]);
+				p2List_item<celda>* aux = visited.add(neighbour[i]);
 				if (neighbour[i].Pos == destination)
 				{
+					pathBack = aux;
 					hasFoundDestination = true;
 				}
 			}
@@ -117,32 +113,45 @@ void j1Map::DrawBFS()
 
 		item = item->next;
 	}
+	
+
 	if (hasFoundDestination)
 	{
-		p2List_item<celda>* pathBack;
-		bool findEnd = false;
-		for (pathBack = visited.start; pathBack && findEnd != false; pathBack= pathBack->next)
+		
+		
+		if (pathBack != nullptr)
 		{
-			if (pathBack->data.Pos == destination)
-			{
-				findEnd = true;
-			}
-
-		}
-		for ( pathBack; pathBack; pathBack= pathBack->data.MomPosPointer )
-		{
-			iPoint pos = MapToWorld(pathBack->data.Pos.x, pathBack->data.Pos.y);
+			/*iPoint pos = MapToWorld(pathBack->data.Pos.x, pathBack->data.Pos.y);
 			TileSet* tileset = GetTilesetFromTileId(27);
 
 			SDL_Rect r = tileset->GetTileRect(27);
-			App->render->Blit(tileset->texture, pos.x, pos.y);
+			App->render->Blit(tileset->texture, pos.x, pos.y);*/
 
+			/*for (p2List_item<celda>* auxCelda = visited.start
+				; auxCelda; auxCelda = auxCelda->next)
+			{
+				if (pathBack->data.MomPos == auxCelda->data.Pos)
+				{
+					pathBack = auxCelda;
+				}
+			}*/
+
+			for (p2List_item<celda>* auxPathBack= pathBack; auxPathBack; auxPathBack = auxPathBack->data.MomPosPointer)
+			{
+				iPoint pos = MapToWorld(pathBack->data.Pos.x, pathBack->data.Pos.y);
+				TileSet* tileset = GetTilesetFromTileId(27);
+
+				SDL_Rect r = tileset->GetTileRect(27);
+				App->render->Blit(tileset->texture, pos.x, pos.y);
+
+			}
 		}
+		
 	}
 	// Draw frontier
 	for (uint i = 0; i < frontier.Count(); ++i)
 	{
-		point = *(frontier.Peek(i));
+		point = (frontier.Peek(i)->Pos);
 		TileSet* tileset = GetTilesetFromTileId(25);
 
 		SDL_Rect r = tileset->GetTileRect(25);
@@ -197,7 +206,16 @@ void j1Map::Draw()
 		}
 	}
 
+	
+
 	DrawBFS();
+
+	TileSet* tileset = GetTilesetFromTileId(27);
+
+	SDL_Rect r = tileset->GetTileRect(27);
+	iPoint pos = MapToWorld(20, 0);
+
+	App->render->Blit(tileset->texture, pos.x, pos.y, &r);
 }
 
 int Properties::Get(const char* value, int default_value) const

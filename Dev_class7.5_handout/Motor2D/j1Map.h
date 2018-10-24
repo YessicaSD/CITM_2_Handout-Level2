@@ -82,6 +82,7 @@ struct celda
 
 	iPoint Pos;
 	iPoint MomPos;
+	p2List_item<celda>* ThisPosPointerinVisited = nullptr;
 	p2List_item<celda>* MomPosPointer=nullptr;
 	celda()
 	{
@@ -165,11 +166,11 @@ private:
 	bool				map_loaded;
 
 	/// BFS
-	p2Queue<iPoint>		frontier;
+	p2Queue<celda>		frontier;
 	p2List<celda>		visited;
 	iPoint destination = { 20, 0 };
 	bool hasFoundDestination = false;
-	
+	p2List_item<celda>* pathBack;
 };
 
 #endif // __j1MAP_H__
