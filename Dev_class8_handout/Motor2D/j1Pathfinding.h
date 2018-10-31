@@ -14,6 +14,49 @@
 // Details: http://theory.stanford.edu/~amitp/GameProgramming/
 // --------------------------------------------------
 
+// forward declaration
+struct PathList;
+
+// ---------------------------------------------------------------------
+// Pathnode: Helper struct to represent a node in the path creation
+// ---------------------------------------------------------------------
+struct PathNode
+{
+	// Convenient constructors
+	PathNode();
+	PathNode(int numSteps, int h, const iPoint& pos, const PathNode* parent);
+	PathNode(const PathNode& node);
+
+	// Fills a list (PathList) of all valid adjacent pathnodes
+	uint FindWalkableAdjacents(PathList& list_to_fill) const;
+	// Calculates this tile score
+	int Score() const;
+	// Calculate the F for a specific destination tile
+	int CalculateF(const iPoint& destination);
+
+	// -----------
+	int numSteps;
+	int h;
+	iPoint pos;
+	const PathNode* parent; // needed to reconstruct the path in the end
+};
+
+// ---------------------------------------------------------------------
+// Helper struct to include a list of path nodes
+// ---------------------------------------------------------------------
+struct PathList
+{
+	// Looks for a node in this list and returns it's list node or NULL
+	const p2List_item<PathNode>* Find(const iPoint& point) const;
+
+	// Returns the Pathnode with lowest score in this list or NULL if empty
+	p2List_item<PathNode>* GetNodeLowestScore() const;
+
+	// -----------
+	// The list itself, note they are not pointers!
+	p2List<PathNode> list;
+};
+
 class j1PathFinding : public j1Module
 {
 public:
@@ -44,6 +87,8 @@ public:
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
+	inline uint ManhattanDistance(const iPoint& origen, const iPoint& final);
+
 private:
 
 	// size of the map
@@ -53,51 +98,8 @@ private:
 	uchar* map;
 	// we store the created path here
 	p2DynArray<iPoint> last_path;
+	PathList openList;
+	PathList closeList;
 };
-
-// forward declaration
-struct PathList;
-
-// ---------------------------------------------------------------------
-// Pathnode: Helper struct to represent a node in the path creation
-// ---------------------------------------------------------------------
-struct PathNode
-{
-	// Convenient constructors
-	PathNode();
-	PathNode(int g, int h, const iPoint& pos, const PathNode* parent);
-	PathNode(const PathNode& node);
-
-	// Fills a list (PathList) of all valid adjacent pathnodes
-	uint FindWalkableAdjacents(PathList& list_to_fill) const;
-	// Calculates this tile score
-	int Score() const;
-	// Calculate the F for a specific destination tile
-	int CalculateF(const iPoint& destination);
-
-	// -----------
-	int g;
-	int h;
-	iPoint pos;
-	const PathNode* parent; // needed to reconstruct the path in the end
-};
-
-// ---------------------------------------------------------------------
-// Helper struct to include a list of path nodes
-// ---------------------------------------------------------------------
-struct PathList
-{
-	// Looks for a node in this list and returns it's list node or NULL
-	const p2List_item<PathNode>* Find(const iPoint& point) const;
-
-	// Returns the Pathnode with lowest score in this list or NULL if empty
-	p2List_item<PathNode>* GetNodeLowestScore() const;
-
-	// -----------
-	// The list itself, note they are not pointers!
-	p2List<PathNode> list;
-};
-
-
 
 #endif // __j1PATHFINDING_H__

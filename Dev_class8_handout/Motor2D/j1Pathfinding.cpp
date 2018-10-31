@@ -2,6 +2,9 @@
 #include "p2Log.h"
 #include "j1App.h"
 #include "j1PathFinding.h"
+#include "p2List.h"
+
+
 
 j1PathFinding::j1PathFinding() : j1Module(), map(NULL), last_path(DEFAULT_PATH_LENGTH),width(0), height(0)
 {
@@ -58,6 +61,13 @@ uchar j1PathFinding::GetTileAt(const iPoint& pos) const
 	return INVALID_WALK_CODE;
 }
 
+inline uint j1PathFinding::ManhattanDistance(const iPoint & origen, const iPoint & final)
+{
+	uint distance=0;
+	distance = abs(origen.x - final.x) + abs(origen.y - final.y);
+	return distance;
+}
+
 // To request all tiles involved in the last generated path
 const p2DynArray<iPoint>* j1PathFinding::GetLastPath() const
 {
@@ -103,13 +113,13 @@ p2List_item<PathNode>* PathList::GetNodeLowestScore() const
 // PathNode -------------------------------------------------------------------------
 // Convenient constructors
 // ----------------------------------------------------------------------------------
-PathNode::PathNode() : g(-1), h(-1), pos(-1, -1), parent(NULL)
+PathNode::PathNode() : numSteps(-1), h(-1), pos(-1, -1), parent(NULL)
 {}
 
-PathNode::PathNode(int g, int h, const iPoint& pos, const PathNode* parent) : g(g), h(h), pos(pos), parent(parent)
+PathNode::PathNode(int g, int h, const iPoint& pos, const PathNode* parent) : numSteps(g), h(h), pos(pos), parent(parent)
 {}
 
-PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), parent(node.parent)
+PathNode::PathNode(const PathNode& node) : numSteps(node.numSteps), h(node.h), pos(node.pos), parent(node.parent)
 {}
 
 // PathNode -------------------------------------------------------------------------
@@ -118,7 +128,7 @@ PathNode::PathNode(const PathNode& node) : g(node.g), h(node.h), pos(node.pos), 
 uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 {
 	iPoint cell;
-	uint before = list_to_fill.list.count();
+	uint before = list_to_fill.list.Count();
 
 	// north
 	cell.create(pos.x, pos.y + 1);
@@ -140,7 +150,7 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 	if(App->pathfinding->IsWalkable(cell))
 		list_to_fill.list.add(PathNode(-1, -1, cell, this));
 
-	return list_to_fill.list.count();
+	return list_to_fill.list.Count();
 }
 
 // PathNode -------------------------------------------------------------------------
@@ -148,7 +158,7 @@ uint PathNode::FindWalkableAdjacents(PathList& list_to_fill) const
 // ----------------------------------------------------------------------------------
 int PathNode::Score() const
 {
-	return g + h;
+	return numSteps + h;
 }
 
 // PathNode -------------------------------------------------------------------------
@@ -156,10 +166,10 @@ int PathNode::Score() const
 // ----------------------------------------------------------------------------------
 int PathNode::CalculateF(const iPoint& destination)
 {
-	g = parent->g + 1;
+	numSteps = parent->numSteps + 1;
 	h = pos.DistanceTo(destination);
 
-	return g + h;
+	return numSteps + h;
 }
 
 // ----------------------------------------------------------------------------------
@@ -167,14 +177,28 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
-	// TODO 1: if origin or destination are not walkable, return -1
+	// TODO 1: if origin or destination are not walkable, return -1 --DONE
+	if(!IsWalkable(origin) || !IsWalkable(destination))
+		return -1;
 
-	// TODO 2: Create two lists: open, close
+	// TODO 2: Create two lists: open, close --DONE
 	// Add the origin tile to open
 	// Iterate while we have tile in the open list
+	PathNode origenNode(0, ManhattanDistance(origin, destination), origin, nullptr);
+	openList.list.add(origenNode);
+	while(openList.list.Count()>0)
+	{
+		
+
+
+
+
+	}
 
 	// TODO 3: Move the lowest score cell from open list to the closed list
 	
+
+
 	// TODO 4: If we just added the destination, we are done!
 	// Backtrack to create the final path
 	// Use the Pathnode::parent and Flip() the path when you are finish
