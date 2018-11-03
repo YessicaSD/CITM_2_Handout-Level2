@@ -87,7 +87,7 @@ public:
 	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
-	inline uint ManhattanDistance(const iPoint& origen, const iPoint& final);
+	inline int ManhattanDistance(const iPoint& origen, const iPoint& final);
 
 private:
 

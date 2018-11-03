@@ -61,9 +61,9 @@ uchar j1PathFinding::GetTileAt(const iPoint& pos) const
 	return INVALID_WALK_CODE;
 }
 
-inline uint j1PathFinding::ManhattanDistance(const iPoint & origen, const iPoint & final)
+inline int j1PathFinding::ManhattanDistance(const iPoint & origen, const iPoint & final)
 {
-	uint distance=0;
+	int distance=0;
 	distance = abs(origen.x - final.x) + abs(origen.y - final.y);
 	return distance;
 }
@@ -202,12 +202,12 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 		}
 	}
 
-	p2List_item<PathNode>* pathNode = closeList.list.end;
-	//while ()
-	//{
-	//	last_path.PushBack(pathNode->data.pos);
-	//	pathNode = closeList.list.find(pathNode->data.parent);
-	//}
+	const p2List_item<PathNode>* pathNode = closeList.list.end;
+	while (pathNode != NULL)
+	{
+		last_path.PushBack(pathNode->data.pos);
+		pathNode = closeList.Find(pathNode->data.parent->pos);
+	}
 	
 
 	// TODO 4: If we just added the destination, we are done!
