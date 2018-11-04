@@ -38,7 +38,7 @@ struct PathNode
 	int numSteps;
 	int h;
 	iPoint pos;
-	const PathNode* parent; // needed to reconstruct the path in the end
+	const PathNode* parent = nullptr; // needed to reconstruct the path in the end
 };
 
 // ---------------------------------------------------------------------
@@ -98,8 +98,7 @@ private:
 	uchar* map;
 	// we store the created path here
 	p2DynArray<iPoint> last_path;
-	PathList openList;
-	PathList closeList;
+	
 };
 
 #endif // __j1PATHFINDING_H__
