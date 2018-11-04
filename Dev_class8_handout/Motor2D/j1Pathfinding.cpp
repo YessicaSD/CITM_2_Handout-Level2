@@ -238,15 +238,13 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			
 			// If it is already in the open list, check if it is a better path (compare G)
 			// If it is a better path, Update the parent
-			else
-			{
-				if (nodeNeigh->data.numSteps < openItem->data.numSteps)
+			else if (nodeNeigh->data.numSteps < openItem->data.numSteps)
 				{
 					openItem->data.parent = &currNode->data;
 					
 				}
 
-			}
+			
 		}
 
 		
