@@ -14,7 +14,7 @@
 #include "j1Pathfinding.h"
 #include "j1App.h"
 
-// TODO 3: Measure the amount of ms that takes to execute:
+// TODO 3: Measure the amount of ms that takes to execute: --DONE
 // App constructor, Awake, Start and CleanUp
 // LOG the result
 
@@ -68,6 +68,7 @@ void j1App::AddModule(j1Module* module)
 // Called before render is available
 bool j1App::Awake()
 {
+	j1PerfTimer timer;
 	pugi::xml_document	config_file;
 	pugi::xml_node		config;
 	pugi::xml_node		app_config;
@@ -96,13 +97,14 @@ bool j1App::Awake()
 			item = item->next;
 		}
 	}
-
+	LOG("Awake time in ms: %f", timer.ReadMs());
 	return ret;
 }
 
 // Called before the first frame
 bool j1App::Start()
 {
+	j1PerfTimer timer;
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
@@ -112,6 +114,7 @@ bool j1App::Start()
 		ret = item->data->Start();
 		item = item->next;
 	}
+	LOG("Start time in ms: %f", timer.ReadMs());
 	return ret;
 }
 
@@ -173,9 +176,9 @@ void j1App::FinishUpdate()
 	// Amount of ms took the last update
 	// Amount of frames during the last second
 
-	float avg_fps = 0.0f;
-	float seconds_since_startup = 0.0f;
-	float dt = 0.0f;
+	float avg_fps = 0.0F;
+	float seconds_since_startup = 0.0F;
+	float dt = 0.0F;
 	uint32 last_frame_ms = 0;
 	uint32 frames_on_last_update = 0;
 	uint64 frame_count = 0;
@@ -255,6 +258,7 @@ bool j1App::PostUpdate()
 // Called before quitting
 bool j1App::CleanUp()
 {
+	j1PerfTimer timer;
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.end;
@@ -264,6 +268,7 @@ bool j1App::CleanUp()
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
+	LOG("CleanUp time in ms: %f", timer.ReadMs());
 	return ret;
 }
 
