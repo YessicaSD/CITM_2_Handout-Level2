@@ -104,7 +104,7 @@ private:
 	mutable p2SString	save_game;
 
 	j1Timer timeSinceStart;
-	j1PerfTimer timerLastUpdate;
+	j1Timer timerLastUpdate;
 	
 };
 

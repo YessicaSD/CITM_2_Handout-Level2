@@ -21,6 +21,7 @@
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
+	j1PerfTimer timer;
 	input = new j1Input();
 	win = new j1Window();
 	render = new j1Render();
@@ -42,6 +43,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 
 	// render last to swap buffer
 	AddModule(render);
+	LOG("Constructor time in ms: %f", timer.ReadMs());
 }
 
 // Destructor
@@ -182,7 +184,7 @@ void j1App::FinishUpdate()
 	 float avg_fps = 0.0F;
 	float seconds_since_startup = timeSinceStart.ReadSec();
 	float dt = 0.0F;
-	uint32 last_frame_ms = (uint32)timerLastUpdate.ReadMs();
+	uint32 last_frame_ms = timerLastUpdate.Read();
 	uint32 frames_on_last_update = 0;
 	static uint64 frame_count = 0;
 	++frame_count;
@@ -262,6 +264,7 @@ bool j1App::PostUpdate()
 // Called before quitting
 bool j1App::CleanUp()
 {
+	j1Timer timerClean;
 	j1PerfTimer timer;
 	bool ret = true;
 	p2List_item<j1Module*>* item;
@@ -272,7 +275,8 @@ bool j1App::CleanUp()
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
-	LOG("CleanUp time in ms: %f", timer.ReadMs());
+	LOG("CleanUp time in ms: %u", timerClean.Read());
+	LOG("CleanUp perfect time in ms: %f", timer.ReadMs());
 	return ret;
 }
 
