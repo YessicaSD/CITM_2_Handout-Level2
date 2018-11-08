@@ -69,6 +69,7 @@ void j1App::AddModule(j1Module* module)
 bool j1App::Awake()
 {
 	j1PerfTimer timer;
+	
 	pugi::xml_document	config_file;
 	pugi::xml_node		config;
 	pugi::xml_node		app_config;
@@ -105,6 +106,7 @@ bool j1App::Awake()
 bool j1App::Start()
 {
 	j1PerfTimer timer;
+	timeSinceStart.Start();
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
@@ -121,6 +123,7 @@ bool j1App::Start()
 // Called each loop iteration
 bool j1App::Update()
 {
+	timerLastUpdate.Start();
 	bool ret = true;
 	PrepareUpdate();
 
@@ -168,7 +171,7 @@ void j1App::FinishUpdate()
 
 	if(want_to_load == true)
 		LoadGameNow();
-
+	
 	// TODO 4: Now calculate:
 	// Amount of frames since startup
 	// Amount of time since game start (use a low resolution timer)
@@ -176,12 +179,13 @@ void j1App::FinishUpdate()
 	// Amount of ms took the last update
 	// Amount of frames during the last second
 
-	float avg_fps = 0.0F;
-	float seconds_since_startup = 0.0F;
+	 float avg_fps = 0.0F;
+	float seconds_since_startup = timeSinceStart.ReadSec();
 	float dt = 0.0F;
-	uint32 last_frame_ms = 0;
+	uint32 last_frame_ms = (uint32)timerLastUpdate.ReadMs();
 	uint32 frames_on_last_update = 0;
-	uint64 frame_count = 0;
+	static uint64 frame_count = 0;
+	++frame_count;
 
 	static char title[256];
 	sprintf_s(title, 256, "Av.FPS: %.2f Last Frame Ms: %02u Last sec frames: %i Last dt: %.3f Time since startup: %.3f Frame Count: %lu ",
