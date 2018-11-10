@@ -170,7 +170,9 @@ void j1App::PrepareUpdate()
 	frame_count++;
 	last_sec_frame_count++;
 
-	// TODO 4: Calculate the dt: differential time since last frame
+	// TODO 4: Calculate the dt: differential time since last frame--DONE
+	if(avg_fps!=0.0F)
+		dt = (1000.0F/ avg_fps)/1000.0F;
 
 	frame_time.Start();
 }
@@ -193,7 +195,7 @@ void j1App::FinishUpdate()
 		last_sec_frame_count = 0;
 	}
 
-	float avg_fps = float(frame_count) / startup_time.ReadSec();
+	avg_fps = float(frame_count) / startup_time.ReadSec();
 	float seconds_since_startup = startup_time.ReadSec();
 	uint32 last_frame_ms = frame_time.Read();
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
@@ -252,10 +254,10 @@ bool j1App::DoUpdate()
 			continue;
 		}
 
-		// TODO 5: send dt as an argument to all updates
+		// TODO 5: send dt as an argument to all updates --DONE
 		// you will need to update module parent class
 		// and all modules that use update
-		ret = item->data->Update();
+		ret = item->data->Update(dt);
 	}
 
 	return ret;

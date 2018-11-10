@@ -112,6 +112,9 @@ private:
 	j1Timer				last_sec_frame_time;
 	uint32				last_sec_frame_count = 0;
 	uint32				prev_last_sec_frame_count = 0;
+
+	float dt=0.0F;
+	float avg_fps = 0.0F;
 };
 
 extern j1App* App; // No student is asking me about that ... odd :-S
