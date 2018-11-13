@@ -170,7 +170,7 @@ void j1App::PrepareUpdate()
 	frame_count++;
 	last_sec_frame_count++;
 
-	// TODO 4: Calculate the dt: differential time since last frame--DONE
+	// TDO 4: Calculate the dt: differential time since last frame--DONE
 	if(avg_fps!=0.0F)
 		dt = (1000.0F/ avg_fps)/1000.0F;
 
@@ -206,13 +206,14 @@ void j1App::FinishUpdate()
 	App->win->SetTitle(title);
 
 	j1PerfTimer timer;
-	// TODO 2: Use SDL_Delay to make sure you get your capped framerate --DONE
+	// TDO 2: Use SDL_Delay to make sure you get your capped framerate --DONE
 	if (last_frame_ms < (1000 / framerate))
 	{
-		SDL_Delay(((1000 / framerate) - last_frame_ms));
+		SDL_Delay((1000 / framerate) - last_frame_ms);
 	}
+	// TDO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected --D
 	float timewait = ((1000 / framerate) - last_frame_ms);
-	// TODO 3: Measure accurately the amount of time it SDL_Delay actually waits compared to what was expected --D
+	
 	LOG("We wait for %f and got back %f", timewait,timer.ReadMs());
 }
 
