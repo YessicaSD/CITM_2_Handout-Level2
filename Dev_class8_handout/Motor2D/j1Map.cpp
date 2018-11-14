@@ -414,13 +414,13 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	}
 	else
 	{
-		layer->data = new uint[layer->width*layer->height];
-		memset(layer->data, 0, layer->width*layer->height);
+		layer->dataMapLayer = new uint[layer->width*layer->height];
+		memset(layer->dataMapLayer, 0, layer->width*layer->height);
 
 		int i = 0;
 		for(pugi::xml_node tile = layer_data.child("tile"); tile; tile = tile.next_sibling("tile"))
 		{
-			layer->data[i++] = tile.attribute("gid").as_int(0);
+			layer->dataMapLayer[i++] = tile.attribute("gid").as_int(0);
 		}
 	}
 

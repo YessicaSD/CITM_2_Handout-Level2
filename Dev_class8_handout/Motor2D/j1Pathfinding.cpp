@@ -251,7 +251,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 	}
 
 	
-	// TODO 4: If we just added the destination, we are done!
+	// TDO 4: If we just added the destination, we are done!
 		// Backtrack to create the final path
 		// Use the Pathnode::parent and Flip() the path when you are finish --DONE
 		if (findDestination)

@@ -39,20 +39,20 @@ struct MapLayer
 	p2SString	name;
 	int			width;
 	int			height;
-	uint*		data;
+	uint*		dataMapLayer;
 	Properties	properties;
 
-	MapLayer() : data(NULL)
+	MapLayer() : dataMapLayer(NULL)
 	{}
 
 	~MapLayer()
 	{
-		RELEASE(data);
+		RELEASE(dataMapLayer);
 	}
 
 	inline uint Get(int x, int y) const
 	{
-		return data[(y*width) + x];
+		return dataMapLayer[(y*width) + x];
 	}
 };
 
