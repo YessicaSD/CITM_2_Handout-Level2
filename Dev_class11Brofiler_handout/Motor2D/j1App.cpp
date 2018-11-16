@@ -15,7 +15,7 @@
 #include "j1App.h"
 
 // TODO 3: Add Brofiler categories to all Update methods
-
+#include "Brofiler\Brofiler.h"
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
@@ -49,6 +49,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 // Destructor
 j1App::~j1App()
 {
+
 	// release modules
 	p2List_item<j1Module*>* item = modules.end;
 
@@ -70,6 +71,7 @@ void j1App::AddModule(j1Module* module)
 // Called before render is available
 bool j1App::Awake()
 {
+	BROFILER_CATEGORY("Awake", Profiler::Color::Orchid);
 	PERF_START(ptimer);
 
 	pugi::xml_document	config_file;
@@ -116,6 +118,7 @@ bool j1App::Awake()
 // Called before the first frame
 bool j1App::Start()
 {
+	BROFILER_CATEGORY("Start", Profiler::Color::Orchid);
 	PERF_START(ptimer);
 	bool ret = true;
 	p2List_item<j1Module*>* item;
@@ -136,6 +139,7 @@ bool j1App::Start()
 // Called each loop iteration
 bool j1App::Update()
 {
+	BROFILER_CATEGORY("All pre/ Update/ Post", Profiler::Color::Orchid);
 	bool ret = true;
 	PrepareUpdate();
 
