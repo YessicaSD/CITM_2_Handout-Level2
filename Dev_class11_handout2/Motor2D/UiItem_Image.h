@@ -26,7 +26,7 @@ public:
 	{
 		if (texture != nullptr)
 		{
-			App->render->Blit(texture, rect.x, rect.y, &section, 1.0F);
+			App->render->Blit(texture, rect.x, rect.y, &section, 0.0F);
 		}
 	}
 };

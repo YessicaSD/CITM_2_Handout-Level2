@@ -23,7 +23,7 @@ public:
 	{
 		if (texture != nullptr)
 		{
-			App->render->Blit(texture, rect.x, rect.y, NULL, 1.0F);
+			App->render->Blit(texture, rect.x, rect.y, NULL, 0.0F);
 		}
 	}
 };
